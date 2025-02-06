@@ -17,6 +17,9 @@ public interface SwitchRepository extends JpaRepository<Switch, Short> {
     boolean existsByIdAndRegistroActivoTrue(Short id);
     
     List<Switch> findByRack(Rack rack);
+    
+    List<Switch> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
+    
 
 }
 

@@ -2,9 +2,11 @@ package ec.gob.mtop.conexion.servicio;
 
 import ec.gob.mtop.conexion.excepcion.*;
 import ec.gob.mtop.conexion.modelo.Equipo;
+import ec.gob.mtop.conexion.modelo.Interfaz;
 import ec.gob.mtop.conexion.modelo.Persona;
 import ec.gob.mtop.conexion.modelo.TipoEquipo;
 import ec.gob.mtop.conexion.repositorio.EquipoRepository;
+import ec.gob.mtop.conexion.repositorio.InterfazRepository;
 import ec.gob.mtop.conexion.repositorio.PersonaRepository;
 import ec.gob.mtop.conexion.repositorio.TipoEquipoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class EquipoService {
 
     @Autowired
     private TipoEquipoRepository tipoEquipoRepository;
+    
+    @Autowired
+    private InterfazRepository interfazRepository;
 
     /**
      * Buscar un Equipo por ID si está activo
@@ -92,7 +97,7 @@ public class EquipoService {
     }
 
     /**
-     * Actualizar un Equipo (desactiva el anterior y crea uno nuevo)
+     * Actualizar un Equipo (Desactiva el anterior, crea uno nuevo y actualiza referencias en Interfaz)
      */
     public Equipo actualizar(Short id, Equipo nuevosDatos, Short idUsuario, Short idTipoEquipo, Short idUsuarioEquipo) {
         try {
@@ -100,13 +105,12 @@ public class EquipoService {
                     .filter(Equipo::getRegistroActivo)
                     .orElseThrow(() -> new ResourceNotFoundException("Equipo no encontrado con ID: " + id));
 
-            // Verificar si el Tipo de Equipo existe
+            // Verificar si el Tipo de Equipo y la Persona existen
             TipoEquipo tipoEquipo = tipoEquipoRepository.findById(idTipoEquipo)
                     .orElseThrow(() -> new ResourceNotFoundException("Tipo de equipo no encontrado con ID: " + idTipoEquipo));
 
-            // Verificar si el Usuario Responsable existe
             Persona usuarioEquipo = personaRepository.findById(idUsuarioEquipo)
-                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + idUsuarioEquipo));
+                    .orElseThrow(() -> new ResourceNotFoundException("Persona no encontrada con ID: " + idUsuarioEquipo));
 
             // 1️⃣ Desactivar el registro antiguo
             equipoExistente.setRegistroActivo(false);
@@ -123,17 +127,27 @@ public class EquipoService {
             nuevoEquipo.setCreadoPorUsuario(idUsuario);
             nuevoEquipo.setFechaCreacion(LocalDateTime.now());
 
-            return equipoRepository.save(nuevoEquipo);
+            // Guardar el nuevo Equipo
+            Equipo equipoGuardado = equipoRepository.save(nuevoEquipo);
+
+            // 3️⃣ **Actualizar todas las Interfaces que referenciaban el Equipo anterior**
+            List<Interfaz> interfaces = interfazRepository.findByEquipo(equipoExistente);
+            for (Interfaz interfaz : interfaces) {
+                interfaz.setEquipo(equipoGuardado);
+            }
+            interfazRepository.saveAll(interfaces);
+
+            return equipoGuardado;
 
         } catch (ResourceNotFoundException e) {
-            throw e; // Se lanza directamente si no se encuentra el registro
+            throw e; 
         } catch (Exception e) {
-            throw new UpdateException("Error al actualizar el equipo: " + e.getMessage());
+            throw new UpdateException("Error al actualizar el Equipo: " + e.getMessage());
         }
     }
 
     /**
-     * Eliminar un Equipo (cambia estado a inactivo)
+     * Eliminar un Equipo (Cambia estado a inactivo y deja nulos los FK en Interfaz)
      */
     public void eliminar(Short id, Short idUsuario) {
         try {
@@ -141,6 +155,19 @@ public class EquipoService {
                     .filter(Equipo::getRegistroActivo)
                     .orElseThrow(() -> new ResourceNotFoundException("Equipo no encontrado con ID: " + id));
 
+            // 1️⃣ **Actualizar todas las Interfaces que referenciaban este Equipo a NULL**
+            List<Interfaz> interfaces = interfazRepository.findByEquipo(equipo);
+            for (Interfaz interfaz : interfaces) {
+                
+                interfaz.setRegistroActivo(false);
+                interfaz.setModificadoPorUsuario(idUsuario);
+                interfaz.setFechaModificacion(LocalDateTime.now());
+                interfazRepository.save(interfaz);
+
+            }
+            interfazRepository.saveAll(interfaces);
+
+            // 2️⃣ Desactivar el Equipo
             equipo.setRegistroActivo(false);
             equipo.setModificadoPorUsuario(idUsuario);
             equipo.setFechaModificacion(LocalDateTime.now());
@@ -149,7 +176,7 @@ public class EquipoService {
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {
-            throw new DeleteException("Error al eliminar el equipo: " + e.getMessage());
+            throw new DeleteException("Error al eliminar el Equipo: " + e.getMessage());
         }
     }
 }

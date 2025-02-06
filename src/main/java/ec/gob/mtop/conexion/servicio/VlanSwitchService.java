@@ -127,7 +127,12 @@ public class VlanSwitchService {
             // 1️⃣ **Actualizar todos los Puertos que referenciaban esta VLAN Switch a NULL**
             List<Puerto> puertos = puertoRepository.findByVlanSwitch(vlanSwitch);
             for (Puerto puerto : puertos) {
-                puerto.setVlanSwitch(null);
+                
+                puerto.setRegistroActivo(false);
+                puerto.setModificadoPorUsuario(idUsuario);
+                puerto.setFechaModificacion(LocalDateTime.now());
+                puertoRepository.save(puerto);
+
             }
             puertoRepository.saveAll(puertos);
 

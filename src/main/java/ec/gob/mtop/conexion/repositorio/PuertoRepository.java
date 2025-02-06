@@ -20,6 +20,8 @@ public interface PuertoRepository extends JpaRepository<Puerto, Short> {
     List<Puerto> findBySwitchRed(Switch switchRed);
     
     List<Puerto> findByVlanSwitch(VlanSwitch vlanSwitch);
+    
+    List<Puerto> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
 
 
 }

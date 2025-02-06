@@ -14,4 +14,8 @@ public interface TipoEquipoRepository extends JpaRepository<TipoEquipo, Short> {
 
     // Verifica si existe un tipo de equipo activo con el ID dado
     boolean existsByIdAndRegistroActivoTrue(Short id);
+    
+    List<TipoEquipo> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
+    
+
 }

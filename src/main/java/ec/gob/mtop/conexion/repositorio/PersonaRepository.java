@@ -17,4 +17,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Short> {
     boolean existsByIdAndRegistroActivoTrue(Short id);
     
     List<Persona> findByDepartamento(Departamento departamento);
+    
+    List<Persona> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
+
 }

@@ -130,7 +130,12 @@ public class DepartamentoService {
             // 1️⃣ **Actualizar todas las Personas que referenciaban este departamento a NULL**
             List<Persona> personas = personaRepository.findByDepartamento(departamento);
             for (Persona persona : personas) {
-                persona.setDepartamento(null);
+                
+                persona.setRegistroActivo(false);
+                persona.setModificadoPorUsuario(idUsuario);
+                persona.setFechaModificacion(LocalDateTime.now());
+                personaRepository.save(persona);
+
             }
             personaRepository.saveAll(personas);
 

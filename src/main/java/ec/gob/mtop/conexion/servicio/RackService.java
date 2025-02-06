@@ -130,7 +130,12 @@ public class RackService {
             // 1️⃣ **Actualizar todos los Switches que referenciaban este Rack a NULL**
             List<Switch> switches = switchRepository.findByRack(rack);
             for (Switch sw : switches) {
-                sw.setRack(null);
+                
+                sw.setRegistroActivo(false);
+                sw.setModificadoPorUsuario(idUsuario);
+                sw.setFechaModificacion(LocalDateTime.now());
+                switchRepository.save(sw);
+
             }
             switchRepository.saveAll(switches);
 

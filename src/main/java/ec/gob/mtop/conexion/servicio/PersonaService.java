@@ -2,8 +2,10 @@ package ec.gob.mtop.conexion.servicio;
 
 import ec.gob.mtop.conexion.excepcion.*;
 import ec.gob.mtop.conexion.modelo.Departamento;
+import ec.gob.mtop.conexion.modelo.Equipo;
 import ec.gob.mtop.conexion.modelo.Persona;
 import ec.gob.mtop.conexion.repositorio.DepartamentoRepository;
+import ec.gob.mtop.conexion.repositorio.EquipoRepository;
 import ec.gob.mtop.conexion.repositorio.PersonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class PersonaService {
     @Autowired
     private DepartamentoRepository departamentoRepository;
 
+    @Autowired
+    private EquipoRepository equipoRepository;
+    
     /**
      * Buscar una Persona por ID si está activa
      */
@@ -84,7 +89,7 @@ public class PersonaService {
     }
 
     /**
-     * Actualizar una Persona (desactiva el anterior y crea uno nuevo)
+     * Actualizar una Persona (Desactiva la anterior, crea una nueva y actualiza referencias en Equipo)
      */
     public Persona actualizar(Short id, Persona nuevosDatos, Short idUsuario, Short idDepartamento) {
         try {
@@ -112,17 +117,27 @@ public class PersonaService {
             nuevaPersona.setCreadoPorUsuario(idUsuario);
             nuevaPersona.setFechaCreacion(LocalDateTime.now());
 
-            return personaRepository.save(nuevaPersona);
+            // Guardar la nueva Persona
+            Persona personaGuardada = personaRepository.save(nuevaPersona);
+
+            // 3️⃣ **Actualizar todos los Equipos que referenciaban la Persona anterior**
+            List<Equipo> equipos = equipoRepository.findByUsuarioEquipo(personaExistente);
+            for (Equipo equipo : equipos) {
+                equipo.setUsuarioEquipo(personaGuardada);
+            }
+            equipoRepository.saveAll(equipos);
+
+            return personaGuardada;
 
         } catch (ResourceNotFoundException e) {
-            throw e; // Se lanza directamente si no se encuentra el registro
+            throw e; 
         } catch (Exception e) {
-            throw new UpdateException("Error al actualizar la persona: " + e.getMessage());
+            throw new UpdateException("Error al actualizar la Persona: " + e.getMessage());
         }
     }
 
     /**
-     * Eliminar una Persona (cambia estado a inactivo)
+     * Eliminar una Persona (Cambia estado a inactivo y deja nulos los FK en Equipo)
      */
     public void eliminar(Short id, Short idUsuario) {
         try {
@@ -130,6 +145,19 @@ public class PersonaService {
                     .filter(Persona::getRegistroActivo)
                     .orElseThrow(() -> new ResourceNotFoundException("Persona no encontrada con ID: " + id));
 
+            // 1️⃣ **Actualizar todos los Equipos que referenciaban esta Persona a NULL**
+            List<Equipo> equipos = equipoRepository.findByUsuarioEquipo(persona);
+            for (Equipo equipo : equipos) {
+                
+                equipo.setRegistroActivo(false);
+                equipo.setModificadoPorUsuario(idUsuario);
+                equipo.setFechaModificacion(LocalDateTime.now());
+                equipoRepository.save(equipo);
+
+            }
+            equipoRepository.saveAll(equipos);
+
+            // 2️⃣ Desactivar la Persona
             persona.setRegistroActivo(false);
             persona.setModificadoPorUsuario(idUsuario);
             persona.setFechaModificacion(LocalDateTime.now());
@@ -138,7 +166,7 @@ public class PersonaService {
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {
-            throw new DeleteException("Error al eliminar la persona: " + e.getMessage());
+            throw new DeleteException("Error al eliminar la Persona: " + e.getMessage());
         }
     }
 }

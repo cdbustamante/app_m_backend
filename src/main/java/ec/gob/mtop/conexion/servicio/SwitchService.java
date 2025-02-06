@@ -145,7 +145,12 @@ public class SwitchService {
             // 1️⃣ **Actualizar todos los Puertos que referenciaban este Switch a NULL**
             List<Puerto> puertos = puertoRepository.findBySwitchRed(switchRed);
             for (Puerto puerto : puertos) {
-                puerto.setSwitchRed(null);
+                
+                puerto.setRegistroActivo(false);
+                puerto.setModificadoPorUsuario(idUsuario);
+                puerto.setFechaModificacion(LocalDateTime.now());
+                puertoRepository.save(puerto);
+
             }
             puertoRepository.saveAll(puertos);
 

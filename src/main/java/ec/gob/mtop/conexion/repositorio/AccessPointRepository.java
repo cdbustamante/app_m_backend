@@ -17,4 +17,6 @@ public interface AccessPointRepository extends JpaRepository<AccessPoint, Short>
     boolean existsByIdAndRegistroActivoTrue(Short id);
     
     List<AccessPoint> findByPuerto(Puerto puerto);
+    
+    List<AccessPoint> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
 }

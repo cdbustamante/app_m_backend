@@ -174,14 +174,24 @@ public class PuertoService {
             // 1️⃣ **Actualizar todas las Interfaces que referenciaban este Puerto a NULL**
             List<Interfaz> interfaces = interfazRepository.findByPuerto(puerto);
             for (Interfaz interfaz : interfaces) {
-                interfaz.setPuerto(null);
+                
+                interfaz.setRegistroActivo(false);
+                interfaz.setModificadoPorUsuario(idUsuario);
+                interfaz.setFechaModificacion(LocalDateTime.now());
+                interfazRepository.save(interfaz);
+
             }
             interfazRepository.saveAll(interfaces);
 
             // 2️⃣ **Actualizar todos los AccessPoints que referenciaban este Puerto a NULL**
             List<AccessPoint> accessPoints = accessPointRepository.findByPuerto(puerto);
             for (AccessPoint accessPoint : accessPoints) {
-                accessPoint.setPuerto(null);
+                
+                accessPoint.setRegistroActivo(false);
+                accessPoint.setModificadoPorUsuario(idUsuario);
+                accessPoint.setFechaModificacion(LocalDateTime.now());
+                accessPointRepository.save(accessPoint);
+
             }
             accessPointRepository.saveAll(accessPoints);
 

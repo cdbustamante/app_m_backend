@@ -14,5 +14,8 @@ public interface VlanSwitchRepository extends JpaRepository<VlanSwitch, Short> {
 
     // Verifica si existe una VLAN activa con el ID dado
     boolean existsByIdAndRegistroActivoTrue(Short id);
+    
+    List<VlanSwitch> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
+
 }
 

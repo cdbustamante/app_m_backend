@@ -14,4 +14,7 @@ public interface RackRepository extends JpaRepository<Rack, Short> {
 
     // Verifica si existe un rack activo con el ID dado
     boolean existsByIdAndRegistroActivoTrue(Short id);
+    
+    List<Rack> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
+
 }

@@ -14,5 +14,8 @@ public interface DepartamentoRepository extends JpaRepository<Departamento, Shor
 
     // Verifica si existe un departamento activo con el ID dado
     boolean existsByIdAndRegistroActivoTrue(Short id);
+    
+    List<Departamento> findByCreadoPorUsuarioOrModificadoPorUsuario(Short idUsuario, Short idUsuarioMod);
+
 }
 

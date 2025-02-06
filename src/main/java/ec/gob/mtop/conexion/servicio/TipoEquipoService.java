@@ -128,7 +128,12 @@ public class TipoEquipoService {
             // 1️⃣ **Actualizar todos los Equipos que referenciaban este Tipo de Equipo a NULL**
             List<Equipo> equipos = equipoRepository.findByTipoEquipo(tipoEquipo);
             for (Equipo equipo : equipos) {
-                equipo.setTipoEquipo(null);
+                
+                equipo.setRegistroActivo(false);
+                equipo.setModificadoPorUsuario(idUsuario);
+                equipo.setFechaModificacion(LocalDateTime.now());
+                equipoRepository.save(equipo);
+
             }
             equipoRepository.saveAll(equipos);
 
