@@ -46,7 +46,7 @@ public class PersonaService {
     /**
      * Crear una nueva Persona, asignando el usuario creador y validando el Departamento
      */
-    public Persona crear(Persona persona, Short idUsuario, Short idDepartamento) {
+    public Persona crear(Persona persona, Short idUsuario, Integer idDepartamento) {
         try {
             // Verificar si el Departamento existe
             Departamento departamento = departamentoRepository.findById(idDepartamento)
@@ -86,7 +86,7 @@ public class PersonaService {
     /**
      * Actualizar una Persona (desactiva el anterior y crea uno nuevo)
      */
-    public Persona actualizar(Short id, Persona nuevosDatos, Short idUsuario, Short idDepartamento) {
+    public Persona actualizar(Short id, Persona nuevosDatos, Short idUsuario, Integer idDepartamento) {
         try {
             Persona personaExistente = personaRepository.findById(id)
                     .filter(Persona::getRegistroActivo)

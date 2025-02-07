@@ -33,18 +33,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // Deshabilita CSRF (usualmente no se usa en APIs REST)
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/usuarios/login").permitAll()  // Permitir acceso al login sin autenticación
-                .requestMatchers("/api/usuarios/admin/**").hasRole("ADMIN") // Solo los ADMIN pueden acceder
-                .requestMatchers("/api/usuarios/user/**").hasAnyRole("USER", "ADMIN") // Solo los usuarios autenticados pueden acceder
-                .anyRequest().authenticated() // Cualquier otra ruta requiere autenticación
+                .requestMatchers("/api/usuarios/login").permitAll()  // Permitir login sin autenticación
+                .requestMatchers("/api/usuarios/admin/**").hasRole("ADMIN") // Solo ADMIN accede a rutas de usuario
+                .requestMatchers("/api/departamentos").authenticated() // Todos los usuarios autenticados pueden ver los departamentos
+                .requestMatchers("/api/departamentos/**").hasRole("ADMIN") // Solo ADMIN puede modificar departamentos
+                .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No usar sesiones
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Agregar el filtro JWT antes de validar credenciales
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     
         return http.build();
     }
+    
     
 
     /**
