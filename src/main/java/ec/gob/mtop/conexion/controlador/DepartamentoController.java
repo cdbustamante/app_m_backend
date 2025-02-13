@@ -5,6 +5,10 @@ import ec.gob.mtop.conexion.modelo.Usuario;
 import ec.gob.mtop.conexion.servicio.DepartamentoService;
 import ec.gob.mtop.conexion.servicio.UsuarioService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,8 +30,25 @@ public class DepartamentoController {
 
     // 🔹 Obtener todos los departamentos activos
     @GetMapping
-    public List<Departamento> obtenerTodos() {
-        return departamentoService.obtenerTodos();
+    public ResponseEntity<Page<Departamento>> obtenerTodos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String codigo,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String fechaCreacion,
+            @RequestParam(required = false) String fechaModificacion,
+            @RequestParam(required = false) String creador,
+            @RequestParam(required = false) String modificador) {
+                
+                
+        System.out.println("   Fecha Creación: " + fechaCreacion);
+
+
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<Departamento> specs = departamentoService.crearEspecificacionFiltro(codigo, nombre, fechaCreacion, fechaModificacion, creador, modificador);
+
+        Page<Departamento> departamentos = departamentoService.obtenerDepartamentosFiltrados(specs, pageable);
+        return ResponseEntity.ok(departamentos);
     }
 
     // 🔹 Obtener un departamento por ID (solo si está activo)

@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">WireHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                
+                <!-- 🔹 Menú único de Administración -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Administración
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" href="/departamentos">Departamentos</a></li>
+                        <li><a class="dropdown-item" href="/usuarios">Usuarios</a></li>
+                        <li><a class="dropdown-item" href="/personas">Personas</a></li>
+                        <li><a class="dropdown-item" href="/equipos">Equipos</a></li>
+                        <li><a class="dropdown-item" href="/puertos">Puertos</a></li>
+                        <li><a class="dropdown-item" href="/switches">Switches</a></li>
+                        <li><a class="dropdown-item" href="/vlans">VLANs</a></li>
+                        <li><a class="dropdown-item" href="/accesspoints">Access Points</a></li>
+                        <li><a class="dropdown-item" href="/interfaces">Interfaces</a></li>
+                        <li><a class="dropdown-item" href="/racks">Racks</a></li>
+                        <li><a class="dropdown-item" href="/tipos-equipos">Tipos de Equipos</a></li>
+                    </ul>
+                </li>
+
+                <!-- 🔹 Cerrar Sesión -->
+                <li class="nav-item"><a class="nav-link" href="/" onclick="logout()">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

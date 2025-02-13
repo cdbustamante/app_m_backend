@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Departamentos - WireHub</title>
+    
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/public/css/departamentos.css">
+</head>
+<body>
+
+    <!-- Contenedor de la barra de navegación -->
+    <div id="navbar-container"></div>
+
+    <div class="container-fluid mt-4">
+        <h1 class="text-center">Gestión de Departamentos</h1>
+
+        <div class="d-flex justify-content-between mb-3">
+            <!-- 🔹 Botón para agregar un nuevo departamento -->
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarDepartamento">
+                <i class="bi bi-plus-circle"></i> Agregar Departamento
+            </button>
+            
+
+            <!-- 🔹 Botón para mostrar u ocultar los filtros -->
+            <button class="btn btn-secondary" id="btnToggleFiltros">
+                <i class="bi bi-funnel"></i> Filtros
+            </button>
+        </div>
+
+        <!-- 🔹 Contenedor de Filtros (Oculto por defecto) -->
+        <div id="contenedorFiltros" class="card p-3 mb-3" style="display: none;">
+            <h5 class="card-title"><i class="bi bi-funnel"></i> Opciones de Filtro</h5>
+            <hr>
+            <div class="row">
+                <!-- Filtros dinámicos -->
+                <div class="col-md-4">
+                    <input type="checkbox" id="filtroCodigo" class="filtro-toggle"> Filtrar por Código
+                    <input type="text" id="inputCodigo" class="form-control mt-2 filtro-input" placeholder="Ingrese código..." style="display: none;">
+                </div>
+
+                <div class="col-md-4">
+                    <input type="checkbox" id="filtroNombre" class="filtro-toggle"> Filtrar por Nombre
+                    <input type="text" id="inputNombre" class="form-control mt-2 filtro-input" placeholder="Ingrese nombre..." style="display: none;">
+                </div>
+
+                <div class="col-md-4">
+                    <input type="checkbox" id="filtroFechaCreacion" class="filtro-toggle"> Filtrar por Fecha de Creación
+                    <input type="date" id="inputFechaCreacion" class="form-control mt-2 filtro-input" style="display: none;">
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <input type="checkbox" id="filtroFechaModificacion" class="filtro-toggle"> Filtrar por Fecha de Modificación
+                    <input type="date" id="inputFechaModificacion" class="form-control mt-2 filtro-input" style="display: none;">
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <input type="checkbox" id="filtroCreador" class="filtro-toggle"> Filtrar por Creador
+                    <input type="text" id="inputCreador" class="form-control mt-2 filtro-input" placeholder="Ingrese creador..." style="display: none;">
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <input type="checkbox" id="filtroModificador" class="filtro-toggle"> Filtrar por Modificador
+                    <input type="text" id="inputModificador" class="form-control mt-2 filtro-input" placeholder="Ingrese modificador..." style="display: none;">
+                </div>
+            </div>
+
+            <!-- Botón para aplicar filtros -->
+            <button class="btn btn-primary mt-3" id="btnAplicarFiltros">Aplicar Filtros</button>
+        </div>
+
+        <!-- 🔹 Tabla de departamentos -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Fecha Creación</th>
+                        <th>Última Modificación</th>
+                        <th>Creado por</th>
+                        <th>Modificado por</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaDepartamentos">
+                    <!-- Se llenará dinámicamente con JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 🔹 Paginación -->
+        <div id="paginacion" class="d-flex justify-content-center mt-3"></div>
+    </div>
+
+    <!-- 🔹 Modal para Agregar Departamento -->
+    <div class="modal fade" id="modalAgregarDepartamento" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarLabel">Agregar Departamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarDepartamento">
+                        <div class="mb-3">
+                            <label for="codigoAgregarDepartamento" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="codigoAgregarDepartamento" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreAgregarDepartamento" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreAgregarDepartamento" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Modal para Editar Departamento -->
+    <div class="modal fade" id="modalEditarDepartamento" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Editar Departamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarDepartamento">
+                        <input type="hidden" id="idEditarDepartamento">
+                        <div class="mb-3">
+                            <label for="codigoEditarDepartamento" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="codigoEditarDepartamento" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreEditarDepartamento" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreEditarDepartamento" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Actualizar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Modal de Confirmación (Éxito) -->
+    <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body">
+                    <h3 id="mensajeExito"></h3>
+                    <div class="my-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="cerrarModalExito" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Modal de Confirmación (Eliminar) -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body">
+                    <h4>¿Estás seguro de que deseas eliminar este departamento?</h4>
+                    <div class="my-3">
+                        <i class="bi bi-exclamation-circle-fill text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarEliminar">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Scripts -->
+    <script src="/config/settings.js"></script>
+    <script src="/controllers/navbarController.js"></script>
+    <script src="/public/js/departamentos.js"></script>
+    <script src="/public/js/departamentoscrud.js"></script>
+    <script src="/public/js/departamentosfiltros.js"></script>
+
+</body>
+</html>

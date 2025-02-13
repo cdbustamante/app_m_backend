@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -32,22 +35,38 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
+        return http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Habilita CORS usando un Bean separado
+            .csrf(csrf -> csrf.disable()) // ✅ Deshabilita CSRF porque se usa JWT
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ Define que las sesiones son sin estado
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/usuarios/perfil").authenticated() // ✅ SOLO autenticados pueden acceder a su perfil
                 .requestMatchers("/api/usuarios/login").permitAll()  // Permitir login sin autenticación
                 .requestMatchers("/api/usuarios/admin/**").hasRole("ADMIN") // Solo ADMIN accede a rutas de usuario
                 .requestMatchers("/api/departamentos").authenticated() // Todos los usuarios autenticados pueden ver los departamentos
                 .requestMatchers("/api/departamentos/**").hasRole("ADMIN") // Solo ADMIN puede modificar departamentos
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-    
-        return http.build();
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // ✅ Agregar filtro JWT antes de UsernamePassword
+            .build();
     }
-    
-    
+
+    /**
+     * 🔹 Configuración global de CORS.
+     * Permite solicitudes desde el frontend y habilita métodos seguros.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Permite solicitudes desde el frontend
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // ✅ Métodos permitidos
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // ✅ Permitir token en headers
+        configuration.setAllowCredentials(true); // ✅ Permitir credenciales (tokens)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     /**
      * 🔹 Configuración del AuthenticationManager.

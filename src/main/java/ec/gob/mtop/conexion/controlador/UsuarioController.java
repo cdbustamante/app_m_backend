@@ -5,6 +5,7 @@ import ec.gob.mtop.conexion.servicio.UsuarioService;
 import ec.gob.mtop.conexion.seguridad.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
+
 public class UsuarioController {
 
     @Autowired
@@ -81,6 +83,27 @@ public class UsuarioController {
         System.out.println("❌ Fallo en la autenticación para usuario: " + request.getUsername());
         return ResponseEntity.status(401).body("Credenciales incorrectas");
     }
+
+    // 🔹 Obtener perfil del usuario autenticado
+    @GetMapping("/perfil")
+    public ResponseEntity<?> obtenerPerfil() {
+        // 📌 Obtener el usuario autenticado desde el token
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        System.out.println("🔍 Intentando obtener perfil para usuario: " + username);
+    
+        Optional<Usuario> usuario = usuarioService.obtenerPorUsername(username);
+    
+        if (usuario.isPresent()) {
+            Usuario user = usuario.get();
+            System.out.println("✅ Usuario encontrado: " + user.getUsernameUsuario() + " con rol: " + user.getRolUsuario());
+            return ResponseEntity.ok(new PerfilResponse(user.getId(), user.getNombreUsuario(), user.getRolUsuario()));
+        } else {
+            System.out.println("❌ Usuario no encontrado en la base de datos");
+            return ResponseEntity.status(404).body("Usuario no encontrado");
+        }
+    }
+
 }
 
 // Clase auxiliar para la solicitud de inicio de sesión
@@ -101,3 +124,20 @@ class AuthResponse {
     public AuthResponse(String token) { this.token = token; }
     public String getToken() { return token; }
 }
+// Clase auxiliar para devolver el perfil del usuario autenticado
+class PerfilResponse {
+    private Integer id;
+    private String username;
+    private String rol;
+
+    public PerfilResponse(Integer id, String username, String rol) {
+        this.id = id;
+        this.username = username;
+        this.rol = rol;
+    }
+
+    public Integer getId() { return id; }
+    public String getUsername() { return username; }
+    public String getRol() { return rol; }
+}
+
