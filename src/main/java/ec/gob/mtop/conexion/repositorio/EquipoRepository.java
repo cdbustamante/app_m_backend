@@ -1,6 +1,7 @@
 package ec.gob.mtop.conexion.repositorio;
 
 import ec.gob.mtop.conexion.modelo.Equipo;
+import ec.gob.mtop.conexion.modelo.Persona;
 import ec.gob.mtop.conexion.modelo.TipoEquipo;
 
 import java.util.List;
@@ -17,5 +18,8 @@ public interface EquipoRepository extends JpaRepository<Equipo, Short> {
     boolean existsByIdAndRegistroActivoTrue(Short id);
     
     List<Equipo> findByTipoEquipo(TipoEquipo tipoEquipo);
+    
+    List<Equipo> findByUsuarioEquipo(Persona usuarioEquipo);
+
 
 }

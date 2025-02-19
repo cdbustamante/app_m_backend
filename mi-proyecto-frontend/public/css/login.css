@@ -1,0 +1,13 @@
+body {
+    background: url('/public/images/fondo2.png') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+.login-container {
+    position: absolute;
+    top: calc(50% + 60px); /* Ajusta la altura de la navbar (60px en este caso) */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Conexiones - WireHub</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/public/css/conexiones.css">
+</head>
+<body>
+
+    <!-- Contenedor de la barra de navegación -->
+    <div id="navbar-container"></div>
+
+    <div class="container mt-4">
+        <div class="content-wrapper">
+          <h1 class="text-center">Gestión de Conexiones</h1>
+      
+          <!-- Campo de búsqueda por cédula -->
+          <div class="input-group mb-3">
+            <input type="text" id="inputCedula" class="form-control" placeholder="Ingrese cédula">
+            <button class="btn btn-primary" id="btnBuscarUsuario">
+              <i class="bi bi-search"></i> Buscar
+            </button>
+          </div>
+      
+          <!-- Tabla de información del usuario -->
+          <div class="table-responsive">
+            <table class="table table-bordered custom-table">
+              <thead>
+                <tr>
+                  <th>Cédula</th>
+                  <th>Nombres</th>
+                  <th>Alias</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaUsuario">
+                <!-- Contenido dinámico generado por JavaScript -->
+              </tbody>
+            </table>
+          </div>
+      
+          <!-- Contenedor para los equipos (responsive) -->
+          <div id="equiposContainer" class="mt-4"></div>
+        </div>
+      </div>
+      
+    <!-- MODAL PARA EDITAR USUARIO -->
+    <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarUsuario">
+                        <div class="mb-3">
+                            <label for="editarNombre" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="editarNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editarAlias" class="form-label">Alias</label>
+                            <input type="text" class="form-control" id="editarAlias" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts personalizados -->
+    <script src="/config/settings.js"></script>
+    <script src="/controllers/navbarController.js"></script>
+    <script src="/public/js/conexiones.js"></script>
+    <script src="/public/js/conexionescrud.js"></script>
+</body>
+</html>

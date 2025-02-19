@@ -2,6 +2,8 @@ package ec.gob.mtop.conexion.repositorio;
 
 import ec.gob.mtop.conexion.modelo.Interfaz;
 import ec.gob.mtop.conexion.modelo.Puerto;
+import ec.gob.mtop.conexion.modelo.Equipo;
+
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ public interface InterfazRepository extends JpaRepository<Interfaz, Short> {
     boolean existsByIdAndRegistroActivoTrue(Short id);
     
     List<Interfaz> findByPuerto(Puerto puerto);
+    List<Interfaz> findByEquipoAndRegistroActivoTrue(Equipo equipo);
+
 
 }
 

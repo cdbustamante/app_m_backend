@@ -1,0 +1,83 @@
+body {
+    background: url('/public/images/fondo2.png') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* 🔹 Estilo personalizado para la tabla */
+.custom-table {
+    border: 2px solid #ffc107; /* Borde amarillo */
+}
+
+.custom-table thead {
+    background-color: #ffc107 !important; /* Fondo amarillo oscuro para el encabezado */
+    color: #fff !important; /* Texto blanco para el encabezado */
+}
+
+.custom-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9 !important; /* Color de fondo para filas pares */
+}
+
+.custom-table tbody tr:nth-child(odd) {
+    background-color: #fff !important; /* Color de fondo para filas impares */
+}
+
+/* 🔹 Corrección del estilo de Bootstrap para evitar interferencias */
+.table>:not(caption)>*>* {
+    background-color: transparent !important; /* Se usa 'transparent' en lugar de RGBA */
+}
+
+/* Contenedor general para el contenido */
+.content-wrapper {
+    background-color: #fff;  /* Fondo blanco */
+    padding: 20px;           /* Espaciado interno */
+    border-radius: 8px;      /* Bordes redondeados */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);  /* (Opcional) Sombra sutil */
+  }
+  
+  /* Aseguramos que el contenido no llegue a los extremos en dispositivos pequeños */
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  /* (El resto de tus estilos para los contenedores de equipos y tablas ya existentes) */
+  .container-alambricos {
+    border: 2px solid #dc3545;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  
+  .container-inalambricos {
+    border: 2px solid #007bff;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  
+  .table-responsive {
+    margin-bottom: 20px;
+  }
+  
+  .table-laptop thead {
+    background-color: #28a745 !important;
+    color: #fff !important;
+  }
+  
+  .table-impresora thead {
+    background-color: #6f42c1 !important;
+    color: #fff !important;
+  }
+  
+  .table-pc thead {
+    background-color: #fd7e14 !important;
+    color: #fff !important;
+  }
+  
+  .table-equipo-default thead {
+    background-color: #343a40 !important;
+    color: #fff !important;
+  }
+  
+

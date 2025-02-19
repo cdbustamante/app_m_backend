@@ -1,0 +1,85 @@
+.navbar-custom {
+    background: #3871eb; /* Azul sólido */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Sombra suave */
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: white !important;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra negra para resaltar el texto */
+
+    font-size: 1.1rem; /* Aumenta un poco el tamaño de la fuente */
+}
+
+
+/* Efecto de encuadre al pasar el mouse */
+.navbar-custom .nav-link {
+    position: relative;
+    padding: 8px 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animación del cuadro que se dibuja al pasar el mouse */
+.navbar-custom .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    border: 2px solid transparent; /* Inicialmente invisible */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Cuando el usuario pasa el mouse, el cuadro aparece */
+.navbar-custom .nav-link:hover::after {
+    border-color: rgba(255, 255, 255, 0.8); /* Blanco semitransparente */
+    padding: 5px; /* Hace que el cuadro crezca suavemente */
+}
+
+
+.navbar-custom .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.7); /* Cambia el borde del botón de la hamburguesa */
+}
+
+.navbar-custom .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+
+.navbar-custom .navbar-toggler {
+    border: 2px solid white; /* Cambia el borde a blanco */
+    outline: none; /* Evita el borde de enfoque predeterminado */
+    box-shadow: none !important; /* Evita sombras negras */
+    background-color: transparent; /* Asegura que no tenga color de fondo */
+    border-radius: 8px; /* Suaviza los bordes */
+    padding: 5px 10px; /* Ajusta el tamaño del botón */
+}
+
+
+
+/* 🔹 Estilos para el menú colapsado (versión móvil) */
+@media (max-width: 991px) {
+    .navbar-custom #navbarNav {
+        border-top: 3px solid rgb(249, 249, 249); /* Línea de separación en la parte superior */
+        margin-top: 10px;
+        padding: 10px 0;
+    }
+
+    /* 🔹 Líneas más delgadas entre opciones */
+    .navbar-custom .nav-item {
+        border-bottom: 3px solid rgba(255, 255, 255, 0.795); /* Línea delgada entre elementos */
+        margin: 0 15px;
+    }
+
+    .navbar-custom .nav-item:last-child {
+        border-bottom: none; /* Elimina la línea del último elemento */
+    }
+}
+

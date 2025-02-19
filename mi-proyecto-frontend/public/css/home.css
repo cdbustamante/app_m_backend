@@ -1,0 +1,107 @@
+body {
+    background: url('/public/images/fondo2.png') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+
+
+/* 🔹 Ajuste para centrar el contenido */
+.home-container {
+    min-height: calc(100vh - 59px); /* 100vh menos la altura de la navbar */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 56px;
+    text-align: center;
+}
+
+
+
+/* Animación general para la página */
+.home-container {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+/* Animación para el título principal */
+.home-container h2 {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 1s ease-out forwards 0.3s;
+}
+
+/* Animación para el texto "BIENVENIDO" */
+.home-container h1 {
+    opacity: 0;
+    transform: scale(0.8);
+    animation: scaleUp 1s ease-out forwards 0.6s;
+}
+
+/* Animación para la descripción */
+.home-container p {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: slideInLeft 1s ease-out forwards 0.9s;
+}
+
+/* Animación para el botón al cargar */
+.home-container button {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideInUp 1s ease-out forwards 1.2s;
+    transition: transform 0.9s ease-in-out; /* Transición suave */
+}
+
+/* Efecto hover en el botón */
+.home-container button:hover {
+    transform: scale(1.03)!important; /* Se agranda un poco */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Sombra ligera */
+}
+
+/* Efecto al quitar el mouse */
+.home-container button:active {
+    transform: scale(0.95); /* Pequeño efecto al hacer clic */
+}
+
+
+/* Keyframes para las animaciones */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleUp {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
